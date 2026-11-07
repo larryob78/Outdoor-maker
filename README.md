@@ -16,7 +16,7 @@ Open the local URL printed by Vite. No model account or API keys are required. T
 ## Five-minute demo
 
 1. Upload a JPEG, PNG or WebP key visual, or start with the built-in demo. Pick one of the six formats. **Fit** shows the whole artwork at default zoom. **Crop** fills the frame. **Template** places your own headline and logo inside adjustable safe zones. Layout changes apply to the selected format.
-2. Try the street poster, roadside billboard and retail screen. These are illustrations. For a real location, upload a photo, select the artwork format, then assign the four corners clockwise. For an object in front of the artwork, trace a single mask polygon. Use the sliders to fine-tune corners, opacity and brightness.
+2. Try the street poster, roadside billboard and retail screen. The default templates are AI-generated photographic mockups of fictional locations. The original drawings are under **Illustrated scene options**. For a real location, upload a photo, select the artwork format, then assign the four corners clockwise. For an object in front of the artwork, trace a single mask polygon. Use the sliders to fine-tune corners, opacity and brightness.
 3. Pick a digital format, set the duration and scrub the timeline. Play it, then download a video or the numbered PNG sequence.
 4. Download a single PNG, the artwork ZIP or the PDF deck. Save on this device before reloading. Undo is available for the last 16 edits in the current session.
 

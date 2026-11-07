@@ -24,10 +24,18 @@ async function image(page,selector,color,name,w=800,h=560){
 test('desktop: upload, edit, save and reopen; export PNGs, composite, PDF and motion',async({page},info)=>{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   await page.goto('/');await ready(page);
-  if(process.env.OUTDOOR_SCREENSHOTS){
-    await page.locator('section[aria-labelledby="format-title"]').screenshot({path:'docs/screenshots/editor.jpg',type:'jpeg',quality:87});
-    await page.getByRole('heading',{name:'Place it in the scene'}).scrollIntoViewIfNeeded();
-    await page.locator('section[aria-labelledby="scene-title"]').screenshot({path:'docs/screenshots/scene.jpg',type:'jpeg',quality:87});
+  const shot=async(name,label)=>{
+    if(process.env.OUTDOOR_SCREENSHOTS)await page.locator('section[aria-labelledby="'+label+'"]').screenshot({path:'docs/screenshots/'+name+'.jpg',type:'jpeg',quality:87});
+  };
+  await shot('editor','format-title');
+  for(const [name,shotName,id] of [['Street poster','scene','photo-street'],['Roadside billboard','roadside','photo-road'],['Retail digital screen','retail','photo-retail']]){
+    await page.locator('#scenes').getByRole('button',{name,exact:true}).click();
+    await expect(page.locator('#scene-kind')).toHaveText('AI-GENERATED PHOTO MOCKUP');
+    await expect(page.locator('#scene-png')).toBeEnabled();
+    const mock=await download(page,'Download mockup PNG',info);
+    expect(mock.name).toBe(id+'-mockup.png');
+    expect(size(mock.bytes)).toEqual([1536,1024]);
+    await shot(shotName,'scene-title');
   }
   await image(page,'#art-upload','#e22a55','campaign.png');
   await page.getByRole('combobox',{name:'Layout',exact:true}).selectOption('template');

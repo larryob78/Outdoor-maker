@@ -1,7 +1,7 @@
 import {formats,defaultLayout} from './src/formats.js';
 import {canvas,drawArt} from './src/art.js';
 import {composite} from './src/perspective.js';
-import {scenePresets,photoQuad,initialScene} from './src/scenes.js';
+import {scenePresets,allPresets,illustrationPresets,photoQuad,initialScene} from './src/scenes.js';
 import {motionAt,recordMotion,videoType} from './src/motion.js';
 import {artwork,campaignZip,deck,download,framesZip,png} from './src/exports.js';
 import {decode,loadImage,projectRecord} from './src/project.js';
@@ -13,7 +13,7 @@ const format=id=>formats.find(f=>f.id===id);
 const options=(el,items)=>el.replaceChildren(...items.map(f=>new Option(f.name,f.id)));
 const fresh=()=>({
   format:'6-sheet', layouts:Object.fromEntries(formats.map(f=>[f.id,{...defaultLayout}])),
-  scene:'street', scenes:Object.fromEntries([...scenePresets,{id:'photo',quad:photoQuad,format:'6-sheet'}]
+  scene:scenePresets[0].id, scenes:Object.fromEntries([...allPresets,{id:'photo',quad:photoQuad,format:'6-sheet'}]
     .map(s=>[s.id,initialScene(s.quad,s.format)])),
   motion:{format:'digital-landscape',duration:6,zoom:1.15,fade:.6},
   files:{},guides:true
@@ -116,7 +116,7 @@ function sync(){
   $('art-name').textContent=state.files.art?.name??'Demo artwork';
   $('logo-name').textContent=state.files.logo?.name??'No logo selected';
   $('photo-name').textContent=state.files.photo?.name??'';
-  $('scene-kind').textContent=state.scene==='photo'?'YOUR UPLOADED PHOTO':'ILLUSTRATIVE SCENE';
+  $('scene-kind').textContent=state.scene==='photo'?'YOUR UPLOADED PHOTO':state.scene.startsWith('photo-')?'AI-GENERATED PHOTO MOCKUP':'ILLUSTRATIVE SCENE';
   $('guides').checked=state.guides;$('scene-format').value=scene().format;$('motion-format').value=state.motion.format;
   $('undo').disabled=!history.length||busy;$('remove-logo').disabled=!assets.logo||busy;
   $('video').disabled=!videoType()||busy;
@@ -130,7 +130,9 @@ function pickers(id,items,key,select) {
   }
 }
 pickers('formats',formats,'format',v=>state.format=v);
-pickers('scenes',[...scenePresets,{id:'photo',name:'Your photo'}],'sceneId',v=>{state.scene=v;$('scene-tool').value='-1';});
+const selectScene=v=>{state.scene=v;$('scene-tool').value='-1';};
+pickers('scenes',[...scenePresets,{id:'photo',name:'Your photo'}],'sceneId',selectScene);
+pickers('illustrations',illustrationPresets,'sceneId',selectScene);
 options($('scene-format'),formats);options($('motion-format'),formats.filter(f=>f.digital));
 for(const [index,name] of ['Top left','Top right','Bottom right','Bottom left'].entries()){
   for(const [axis,label] of ['horizontal','vertical'].entries()){
@@ -157,7 +159,7 @@ $('scene-guides').onclick=e=>{
 };
 $('clear-mask').onclick=()=>change(()=>scene().mask=[]);
 $('reset-placement').onclick=()=>change(()=>{
-  const preset=scenePresets.find(s=>s.id===state.scene);
+  const preset=allPresets.find(s=>s.id===state.scene);
   state.scenes[state.scene]=initialScene(structuredClone(preset?.quad??photoQuad),preset?.format??state.format);
 });
 $('timeline').oninput=()=>{stop();time=Number($('timeline').value);renderMotion();};
@@ -219,7 +221,7 @@ $('zip').onclick=()=>run('Making six PNGs…',async()=>download(await campaignZi
 $('pdf').onclick=()=>run('Building review deck…',async()=>{
   const pages=formats.map(f=>({title:f.name,note:f.w+' x '+f.h+' px artwork preset',render:()=>artwork(f,state.layouts[f.id],assets)}));
   for(const s of [...scenePresets,...(assets.photo?[{id:'photo',name:'Uploaded scene'}]:[])]){
-    pages.push({title:s.name,note:s.id==='photo'?'Uploaded location photo':'Illustrative scene',render:()=>sceneCanvas(s.id,1200)});
+    pages.push({title:s.name,note:s.id==='photo'?'Uploaded location photo':'AI-generated photographic mockup',render:()=>sceneCanvas(s.id,1200)});
   }
   download(await deck(pages),'outdoor-review.pdf');
 },'PDF deck ready.');
@@ -234,12 +236,13 @@ $('frames').onclick=()=>run('Rendering frames…',async()=>{
 },'PNG frames ZIP ready.');
 window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue='';}});
 await run('Opening Outdoor Maker…',async()=>{
-  await Promise.all(scenePresets.map(async s=>photos[s.id]=await loadImage(import.meta.env.BASE_URL+'scenes/'+s.id+'.svg')));
+  await Promise.all(allPresets.map(async s=>photos[s.id]=await loadImage(import.meta.env.BASE_URL+'scenes/'+s.file)));
   const saved=await projectRecord('readonly');
   if(saved){
     const loaded={};
     try{for(const [key,file] of Object.entries(saved.files)) loaded[key]=await decode(file);}
     catch(error){Object.values(loaded).forEach(img=>img.close());throw error;}
-    state=saved;assets=loaded;
+    state={...saved,scenes:{...fresh().scenes,...saved.scenes}};assets=loaded;
+    if(illustrationPresets.some(p=>p.id===state.scene)) $('legacy-scenes').open=true;
   }
 },'Ready. Use the demo artwork or upload a campaign image.');

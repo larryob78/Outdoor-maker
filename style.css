@@ -47,3 +47,5 @@ select,textarea{width:100%;min-width:0;font-size:16px}
 footer{padding:0 0 32px;font-size:.72rem;letter-spacing:.13em;font-weight:700}
 @media(max-width:760px){.editor{grid-template-columns:1fr}.controls{border-left:0;border-top:1px solid var(--line)}.preview{min-height:180px}canvas{max-height:46vh}.toolbar span{flex:1 0 40%}}
 @media(prefers-reduced-motion:reduce){.portal{transition:none}}
+
+#legacy-scenes{margin-top:10px}
