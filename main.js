@@ -101,8 +101,8 @@ function renderMotion(){
   time=Math.min(time,m.duration);
   drawArt(c,f,state.layouts[f.id],assets,{motion:motionAt(time,m)});
   $('timeline').max=m.duration;$('timeline').value=time;
-  $('duration-label').value=m.duration+' s';$('fade-label').value=m.fade.toFixed(1)+' s';
-  $('zoom-label').value=Math.round(m.zoom*100)+'%';$('time-label').value=time.toFixed(2)+' s';
+  $('duration-label').textContent=m.duration+' s';$('fade-label').textContent=m.fade.toFixed(1)+' s';
+  $('zoom-label').textContent=Math.round(m.zoom*100)+'%';$('time-label').textContent=time.toFixed(2)+' s';
 }
 function stop(){cancelAnimationFrame(raf);raf=0;$('play').textContent='Play preview';}
 function sync(){

@@ -62,7 +62,7 @@ export function drawArt(c, f, l, assets, {guides=false, motion}={}) {
     const m=safe(f);
     ctx.setLineDash([m*.25,m*.15]);ctx.lineWidth=Math.max(1,m*.05);
     ctx.strokeStyle='#111';ctx.strokeRect(m,m,w-2*m,h-2*m);
-    ctx.lineDash([m*.25,m*.15]);ctx.lineDashOffset=m*.2;ctx.strokeStyle='#fff';
+    ctx.setLineDash([m*.25,m*.15]);ctx.lineDashOffset=m*.2;ctx.strokeStyle='#fff';
     ctx.strokeRect(m,m,w-2*m,h-2*m);ctx.setLineDash([]);ctx.lineDashOffset=0;
   }
   return warnings;

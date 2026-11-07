@@ -5,7 +5,7 @@ main{max-width:1360px;padding:0 clamp(16px,4vw,64px);margin:auto}
 .mast{min-height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);font-size:.74rem;font-weight:700;letter-spacing:.12em}
 .brand{font-size:1.5rem;letter-spacing:-.09em}
 .hero{display:grid;grid-template-columns:1fr auto;align-items:center;gap:24px;padding:clamp(32px,6vw,86px) 0}
-.hero h1{font-size:clamp(3rem,9vw,8rem);letter-spacing:-.095em;line-height:.82;margin:.14em 0 .22em;font-weight:700}
+.hero h1{font-size:clamp(3rem,9vw,8rem);letter-spacing:-.065em;line-height:.82;margin:.14em 0 .22em;font-weight:700}
 .hero p:last-child{max-width:37ch;line-height:1.55}
 .hero h1 span{color:var(--muted)}
 .portal{display:grid;place-items:center;width:clamp(62px,23vw,245px);aspect-ratio:1;border-radius:50%;background:#000;color:#fff;text-decoration:none;font-size:clamp(2rem,8vw,6.5rem);transition:transform .4s}

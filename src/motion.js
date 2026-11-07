@@ -10,7 +10,7 @@ export function motionAt(time,{duration,fade,zoom}) {
 
 export function videoType() {
   if(!globalThis.MediaRecorder || !HTMLCanvasElement.prototype.captureStream) return '';
-  return ['video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm']
+  return ['video/mp4;codecs=avc1','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm','video/mp4']
     .find(v=>MediaRecorder.isTypeSupported(v)) ?? '';
 }
 

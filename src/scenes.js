@@ -5,4 +5,4 @@ export const scenePresets=[
   {id:'retail',name:'Retail digital screen',format:'digital-portrait',quad:asQuad([[509,161],[701,194],[701,587],[509,630]])},
 ];
 export const photoQuad=[[.22,.22],[.78,.22],[.78,.78],[.22,.78]];
-export const initialScene=(quad,format)=>({quad,mask:[],format,opacity:1,brightness:1});
+export const initialScene=(quad,format)=>({quad:quad.map(p=>[...p]),mask:[],format,opacity:1,brightness:1});
